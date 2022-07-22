@@ -27,11 +27,11 @@ switch ($action) {
         $title = "Inscription";
         if (!empty($_POST)) {
             require_once MODELS_VISITEUR . 'Inscription.php';
-            $identifiant = htmlentities(trim($_POST['identifiant']));
-            $nom = htmlentities(trim($_POST['nom']));
-            $prenom = htmlentities(trim($_POST['prenom']));
-            $mdp = htmlentities(trim($_POST['mdp']));
-            $mdpc = htmlentities(trim($_POST['mdpc']));
+            $identifiant = htmlspecialchars(trim($_POST['identifiant']));
+            $nom = htmlspecialchars(trim($_POST['nom']));
+            $prenom = htmlspecialchars(trim($_POST['prenom']));
+            $mdp = htmlspecialchars(trim($_POST['mdp']));
+            $mdpc = htmlspecialchars(trim($_POST['mdpc']));
 
             $inscription = new Inscription($identifiant, $nom, $prenom, $mdp, $mdpc);
             if (!$inscription->verifierInscription()) {

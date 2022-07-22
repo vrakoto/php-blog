@@ -31,4 +31,76 @@ class Commun {
         $p = $this->pdo->query($req);
         return $p->fetchAll();
     }
+
+    
+    function nbCreatedBlogsToday(): int
+    {
+        $req = "SELECT count(id) as nbBlogs FROM blog
+                WHERE (`created_at` > DATE_SUB(now(), INTERVAL 1 DAY));";
+
+        $p = $this->pdo->query($req);
+        return $p->fetch()['nbBlogs'];
+    }
+
+    function nbBlogsThisWeek(): int
+    {
+        $req = "SELECT count(id) as nbBlogs FROM blog
+                WHERE YEARWEEK(`created_at`, 1) = YEARWEEK(CURDATE(), 1)";
+
+        $p = $this->pdo->query($req);
+        return $p->fetch()['nbBlogs'];
+    }
+
+    function nbBlogsThisMonth(): int
+    {
+        $req = "SELECT count(id) as nbBlogs FROM blog 
+                WHERE MONTH(created_at) = MONTH(CURRENT_DATE())
+                AND YEAR(created_at) = YEAR(CURRENT_DATE())";
+
+        $p = $this->pdo->query($req);
+        return $p->fetch()['nbBlogs'];
+    }
+
+    function nbBlogsThisYear(): int
+    {
+        $req = "SELECT count(id) as nbBlogs FROM blog
+                WHERE YEAR(created_at) = YEAR(CURDATE())";
+
+        $p = $this->pdo->query($req);
+        return $p->fetch()['nbBlogs'];
+    }
+
+    function nbBlogsTotal(): int
+    {
+        $req = "SELECT count(id) as nbBlogs FROM blog";
+
+        $p = $this->pdo->query($req);
+        return $p->fetch()['nbBlogs'];
+    }
+
+
+    function getLesBlogs(bool $recemment = TRUE): array
+    {
+        $req = "SELECT * FROM blog";
+        if ($recemment) {
+            $req .= " ORDER BY created_at DESC";
+        }
+
+        $p = $this->pdo->query($req);
+        return $p->fetchAll();
+    }
+
+    function getLesBlogsParCategorie(string $laCategorie): array
+    {
+        if ($laCategorie === 'toutes') {
+            return $this->getLesBlogs(true);
+        }
+        $req = "SELECT * FROM blog
+                WHERE intitule_categorie = :categorie
+                ORDER BY titre";
+
+        $p = $this->pdo->prepare($req);
+        $p->execute(['categorie' => $laCategorie]);
+        return $p->fetchAll();
+    }
 }

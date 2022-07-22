@@ -16,13 +16,13 @@ switch ($action) {
         if (!empty($_POST)) {
             require_once MODELS_UTILISATEUR . 'CreationBlog.php';
 
-            $titreBlog = htmlentities($_POST['titreBlog']);
+            $titreBlog = htmlspecialchars($_POST['titreBlog']);
             if (isset($_POST['categorie'])) {
-                $categorie = htmlentities($_POST['categorie']);
+                $categorie = htmlspecialchars($_POST['categorie']);
             } else {
                 $categorie = 'Aucune';
             }
-            $description = htmlentities($_POST['description']);
+            $description = htmlspecialchars($_POST['description']);
 
             $blog = new CreationBlog($titreBlog, $categorie, $description);
             
@@ -32,13 +32,19 @@ switch ($action) {
             } else {
                 try {
                     $blog->creerBlog();
-                    $_SESSION['success'] = 'Votre blog a bien été créé !';
+                    header('Location:index.php?p=blog');
+                    exit();
                 } catch (\Throwable $th) {
                     $erreur = "Erreur interne rencontrée lors de la création du blog";
                 }
             }
         }
         require_once VUES_UTILISATEUR . 'creationBlog.php';
+    break;
+
+    case 'mesBlogs':
+        $lesBlogs = $pdo->getLesBlogs(true);
+        require_once VUES_UTILISATEUR . 'mesBlogs.php';
     break;
 
     default:

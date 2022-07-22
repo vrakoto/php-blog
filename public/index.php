@@ -20,6 +20,7 @@ define("VUES_UTILISATEUR", VUES . 'utilisateur' .DIRECTORY_SEPARATOR);
 define("VUES_VISITEUR", VUES . 'visiteur' .DIRECTORY_SEPARATOR);
 
 define("ELEMENTS", ROOT . 'elements' . DIRECTORY_SEPARATOR);
+define("COMPONENTS", ELEMENTS . 'components' . DIRECTORY_SEPARATOR);
 
 define("FONCTIONS", ROOT . 'fonctions' . DIRECTORY_SEPARATOR);
 

@@ -43,9 +43,7 @@ function form_input_label(string $idRef, string $typeInput, string $titre, array
 HTML;
 }
 
-function keepValueAfterSubmit(string $variable): string
-{
-    if (!isset($erreurs[$variable])) {
-        return htmlentities($_POST[$variable] ?? '');
-    }
-}
+function removeSpecialChr(string $input) {
+    $string = str_replace(' ', ' ', $input); // Replaces all spaces with hyphens.
+    return preg_replace('/[^A-Za-z0-9\-?!()]/', '', $string); // Removes special chars.
+ }

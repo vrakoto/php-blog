@@ -1,8 +1,6 @@
-const inputRecherche = document.querySelector('#searchCateg');
-const lesCategories = document.querySelectorAll('.lesCategories');
-
-inputRecherche.addEventListener('input', function (e) {
-    let maRecherche = e.currentTarget.value.toLowerCase();
+function rechercherCategorie(currentInput) {
+    const lesCategories = document.querySelectorAll('.lesCategories');
+    let maRecherche = currentInput.value.toLowerCase();
     
     for (let i = 0; i < lesCategories.length; i++) {
         const laCategorie = lesCategories[i];
@@ -14,4 +12,21 @@ inputRecherche.addEventListener('input', function (e) {
             laCategorie.classList.remove("filtrerRechercheCategorie");
         }
     }
-});
+}
+
+function rechercherBlog(currentInput) {
+    const titreBlogs = document.querySelectorAll('.card-title');
+    let maRecherche = currentInput.value.toLowerCase();
+    
+    for (let i = 0; i < titreBlogs.length; i++) {
+        const leTitre = titreBlogs[i];
+        const leBlog = leTitre.closest('.card.mx-3');
+        const leTitreText = leTitre.textContent.toLowerCase();
+        
+        if (!leTitreText.includes(maRecherche)) {
+            leBlog.classList.add("filtrerRechercheCategorie");
+        } else {
+            leBlog.classList.remove("filtrerRechercheCategorie");
+        }
+    }
+}

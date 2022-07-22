@@ -4,6 +4,11 @@ if (!empty($swapController)) {
     switch ($swapController) {
         case 'accueil':
             $title = "Accueil";
+            $nbBlogToday = $pdo->nbCreatedBlogsToday();
+            $nbBlogThisWeek = $pdo->nbBlogsThisWeek();
+            $nbBlogMonth = $pdo->nbBlogsThisMonth();
+            $nbBlogYear = $pdo->nbBlogsThisYear();
+            $nbBlogTotal = $pdo->nbBlogsTotal();
             require_once VUES . 'accueil.php';
         break;
 
@@ -11,11 +16,21 @@ if (!empty($swapController)) {
             $title = "Blog";
             $categorieRequest = '';
             $categories = $pdo->getLesCategories();
+            $lesBlogs = $pdo->getLesBlogs();
             if (isset($_REQUEST['categorie'])) {
                 $categorieRequest = htmlentities($_REQUEST['categorie']);
                 $active = '';
+
+                $lesBlogs = $pdo->getLesBlogsParCategorie($categorieRequest);
             }
-            require_once VUES . 'blog.php';
+
+            if (isset($_REQUEST['id'])) {
+                $id = (int)$_REQUEST['id'];
+                echo $id;
+                require_once VUES . 'consulterBlog.php';
+            } else {
+                require_once VUES . 'blog.php';
+            }
         break;
     
         default:

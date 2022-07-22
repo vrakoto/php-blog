@@ -5,7 +5,7 @@
     
 
     <div class="mb-4 mt-4">
-        <input type="text" class="form-input mb-2" id="searchCateg" placeholder="Rechercher une catégorie">
+        <input type="text" class="form-input mb-2" oninput="rechercherCategorie(this)" placeholder="Rechercher une catégorie">
         <select name="categorie" class="form-select" multiple>
             <?php foreach ($categories as $c):
                 $laCateg = htmlentities($c['intitule']);
