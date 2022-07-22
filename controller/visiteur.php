@@ -40,7 +40,7 @@ switch ($action) {
             } else {
                 try {
                     $inscription->inscrire();
-                    header('index.php?p=accueil');
+                    header('Location:index.php?p=connexion');
                     exit();
                 } catch (\Throwable $th) {
                     $erreur = "Erreur interne rencontrée lors de l'inscription";

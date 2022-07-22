@@ -43,8 +43,23 @@ switch ($action) {
     break;
 
     case 'mesBlogs':
-        $lesBlogs = $pdo->getLesBlogs(true);
+        $lesBlogs = $utilisateur->getLesBlogsUtilisateur($monIdentifiant);
+        if (count($lesBlogs) <= 0) {
+            $noItems = "Vous n'avez aucun blog.";
+        }
         require_once VUES_UTILISATEUR . 'mesBlogs.php';
+    break;
+
+
+    case 'supprimerBlog':
+        $idBlog = (int)$_REQUEST['id'];
+        try {
+            $utilisateur->supprimerBlog($idBlog);
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
+        } catch (\Throwable $th) {
+            $erreur = "Erreur interne rencontrée lors de la suppression du blog";
+        }
     break;
 
     default:

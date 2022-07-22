@@ -48,10 +48,11 @@ class CreationBlog extends Commun {
 
     function creerBlog(): bool
     {
-        $req = "INSERT INTO blog (intitule_categorie, titre, description) VALUES (:intitule_categorie, :titre, :description)";
+        $req = "INSERT INTO blog (intitule_categorie, auteur, titre, description) VALUES (:intitule_categorie, :auteur, :titre, :description)";
         $p = $this->pdo->prepare($req);
         return $p->execute([
             'intitule_categorie' => $this->intituleCategorie,
+            'auteur' => $this->identifiant,
             'titre' => $this->titre,
             'description' => $this->description
         ]);

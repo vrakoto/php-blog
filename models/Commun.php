@@ -79,6 +79,32 @@ class Commun {
     }
 
 
+    function estMonBlog(int $idBlog): bool
+    {
+        $req = "SELECT auteur FROM blog
+                WHERE id = :idBlog
+                AND auteur = :auteur";
+
+        $p = $this->pdo->prepare($req);
+        $p->execute([
+            'idBlog' => $idBlog,
+            'auteur' => $this->identifiant
+        ]);
+        return !empty($p->fetch()); 
+    }
+
+    function getLesBlogsUtilisateur(string $identifiant): array
+    {
+        $req = "SELECT * FROM blog
+                WHERE auteur = :identifiant
+                ORDER BY created_at DESC";
+        $p = $this->pdo->prepare($req);
+
+        $p->execute(['identifiant' => $identifiant]);
+        return $p->fetchAll();
+    }
+
+
     function getLesBlogs(bool $recemment = TRUE): array
     {
         $req = "SELECT * FROM blog";
@@ -98,8 +124,8 @@ class Commun {
         $req = "SELECT * FROM blog
                 WHERE intitule_categorie = :categorie
                 ORDER BY titre";
-
         $p = $this->pdo->prepare($req);
+
         $p->execute(['categorie' => $laCategorie]);
         return $p->fetchAll();
     }
