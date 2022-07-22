@@ -23,39 +23,29 @@ function convertDate(string $date, bool $heure = FALSE): string
     return $date->format('d/m/Y' . $heure);
 }
 
-function includePages(string $page, string $type = 'commun'): string
+function form_input_label(string $idRef, string $typeInput, string $titre, array $erreurs, bool $keepValue = TRUE, string $property = NULL): string
 {
-    switch ($type) {
-        case 'user':
-            return require_once VUES_UTILISATEUR . $page . '.php';
-        break;
-
-        case 'visiteur':
-            return require_once VUES_VISITEUR . $page . '.php';
-        break;
-        
-        default:
-            return require_once VUES . $page . '.php';
-        break;
-    }
-}
-
-function form_input_label(string $idRef, string $typeInput, string $titre, bool $keepValueAfterSubmit, string $property = NULL): string
-{
-    $keepValue = '';
     $isInvalid = '';
-    if (isset($_POST[$idRef])) {
-        $isInvalid = " is-invalid";
+    if (isset($erreurs[$idRef])) {
+        $isInvalid = "is-invalid";
+    }
 
-        if ($keepValueAfterSubmit) {
-            $keepValue = $_POST[$idRef];
-        }
+    $value = '';
+    if ($keepValue && !isset($erreurs[$idRef])) {
+        $value = htmlentities($_POST[$idRef] ?? '');
     }
 
     return <<<HTML
     <div class="mb-3">
         <label for="$idRef" class="form-label has-warning mb-0">$titre</label>
-        <input type="$typeInput" name="$idRef" class="form-control $isInvalid" id="$idRef" value="$keepValue" $property>
+        <input type="$typeInput" name="$idRef" class="form-control $isInvalid" id="$idRef" value="$value" $property>
     </div>
 HTML;
+}
+
+function keepValueAfterSubmit(string $variable): string
+{
+    if (!isset($erreurs[$variable])) {
+        return htmlentities($_POST[$variable] ?? '');
+    }
 }

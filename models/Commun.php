@@ -23,4 +23,12 @@ class Commun {
     {
         return $this->identifiant;
     }
+
+    function getLesCategories(): array
+    {
+        $req = "SELECT intitule FROM categorie
+                ORDER BY 1";
+        $p = $this->pdo->query($req);
+        return $p->fetchAll();
+    }
 }

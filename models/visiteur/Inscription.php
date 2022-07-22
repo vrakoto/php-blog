@@ -17,6 +17,12 @@ class Inscription extends Commun {
         $this->mdp_confirm = $mdp_confirm;
     }
 
+    function verifierInscription(): bool
+    {
+        return empty($this->getErreurs());
+    }
+
+
     function identifiantExistant(string $identifiant_inscription): bool
     {
         $req = "SELECT identifiant FROM utilisateur WHERE identifiant = :identifiant";
@@ -26,11 +32,6 @@ class Inscription extends Commun {
         ]);
 
         return !empty($p->fetch());
-    }
-
-    function verifierInscription(): bool
-    {
-        return empty($this->getErreurs());
     }
 
     function getErreurs(): array
@@ -52,7 +53,7 @@ class Inscription extends Commun {
             $erreurs['mdp'] = "Le mot de passe est trop court";
         }
         if ($this->mdp_confirm !== $this->mdp) {
-            $erreurs['mdp'] = "Les mots de passes ne correspondent pas";
+            $erreurs['mdpc'] = "Les mots de passes ne correspondent pas";
         }
         return $erreurs;
     }

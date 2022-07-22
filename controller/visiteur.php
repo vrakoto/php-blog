@@ -1,9 +1,10 @@
 <?php
 switch ($action) {
     case 'connexion':
+        $erreurs = [];
+        $title = "Connexion";
         if (!empty($_POST)) {
             require_once MODELS_VISITEUR . 'Connexion.php';
-            $erreurs = [];
             $identifiant = htmlentities(trim($_POST['identifiant']));
             $mdp = htmlentities(trim($_POST['mdp']));
 
@@ -18,13 +19,14 @@ switch ($action) {
                 }
             }
         }
-        includePages('connexion', 'visiteur');
+        require_once VUES_VISITEUR . 'connexion.php';
     break;
 
     case 'inscription':
+        $erreurs = [];
+        $title = "Inscription";
         if (!empty($_POST)) {
             require_once MODELS_VISITEUR . 'Inscription.php';
-            $erreurs = [];
             $identifiant = htmlentities(trim($_POST['identifiant']));
             $nom = htmlentities(trim($_POST['nom']));
             $prenom = htmlentities(trim($_POST['prenom']));
@@ -38,13 +40,14 @@ switch ($action) {
             } else {
                 try {
                     $inscription->inscrire();
-                    $success = 'Inscription réussie ! Connectez-vous';
+                    header('index.php?p=accueil');
+                    exit();
                 } catch (\Throwable $th) {
                     $erreur = "Erreur interne rencontrée lors de l'inscription";
                 }
             }
         }
-        includePages('inscription', 'visiteur');
+        require_once VUES_VISITEUR . 'inscription.php';
     break;
 
     default:

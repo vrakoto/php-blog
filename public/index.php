@@ -27,6 +27,7 @@ define("MODELS", ROOT . 'models' . DIRECTORY_SEPARATOR);
 define("MODELS_VISITEUR", MODELS . 'visiteur' . DIRECTORY_SEPARATOR);
 
 define("CSS", 'CSS' . DIRECTORY_SEPARATOR);
+define("ICON", 'icon' . DIRECTORY_SEPARATOR);
 define("FONT_AWESOME", CSS . 'fontawesome' . DIRECTORY_SEPARATOR);
 define("JS", 'JS' . DIRECTORY_SEPARATOR);
 define("JS_UTILS", JS . 'utils' . DIRECTORY_SEPARATOR);

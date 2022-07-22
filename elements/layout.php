@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= CSS . 'bootstrap' . DIRECTORY_SEPARATOR . 'bootstrap.min.css' ?>">
     <link rel="stylesheet" href=<?= FONT_AWESOME . 'CSS' . DIRECTORY_SEPARATOR . 'all.min.css' ?>>
+    <link rel="stylesheet" href="<?= CSS . 'main.css' ?>">
+    <link rel="icon" href="<?= ICON . 'blog.png' ?>">
     <title><?= $title ?? 'Projet Commerce' ?></title>
 </head>
 
@@ -22,6 +24,9 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?= nav_link('accueil', 'Accueil') ?>
                     <?= nav_link('blog', 'Blog') ?>
+                    <?php if ($estConnecte): ?>
+                        <?= nav_link('creationBlog', 'Créer un blog') ?>
+                    <?php endif ?>
                 </ul>
 
                 <div class="d-flex">
@@ -29,7 +34,8 @@
                         <a class="nav-item btn btn-primary mx-2" href="index.php?p=connexion">Connexion</a>
                         <a class="nav-item btn btn-success" href="index.php?p=inscription">Inscription</a>
                     <?php else: ?>
-                        <a class="nav-item btn btn-danger" href="index.php?p=deconnexion">Deconnexion</a>
+                        <a class="nav-item btn btn-danger mx-2" href="index.php?p=deconnexion">Deconnexion</a>
+                        <a class="nav-item btn btn-secondary" href="index.php?p=parametres"><i class="fa-solid fa-gears"></i></a>
                     <?php endif ?>
                 </div>
 
@@ -53,7 +59,7 @@
                 </div>
             <?php endif ?>
 
-            <?php if (isset($success)): ?>
+            <?php if (!empty($success)): ?>
                 <div class="alert alert-success text-center">
                     <h3><?= $success ?></h3>
                 </div>
@@ -64,6 +70,7 @@
     </div>
     
     <script src="<?= JS_UTILS . 'bootstrap.bundle.min.js' ?>"></script>
+    <script src="<?= JS . 'main.js' ?>"></script>
 </body>
 
 </html>
