@@ -23,21 +23,47 @@
                     <?= nav_link('accueil', 'Accueil') ?>
                     <?= nav_link('blog', 'Blog') ?>
                 </ul>
+
                 <div class="d-flex">
-                    <?php if (!$connecte): ?>
-                        <a class="btn btn-primary mx-2" href="index.php?p=connexion">Connexion</a>
-                        <a class="btn btn-success" href="index.php?p=inscription">Inscription</a>
+                    <?php if (!$estConnecte): ?>
+                        <a class="nav-item btn btn-primary mx-2" href="index.php?p=connexion">Connexion</a>
+                        <a class="nav-item btn btn-success" href="index.php?p=inscription">Inscription</a>
                     <?php else: ?>
-                        <a class="btn btn-danger" href="index.php?p=deconnexion">Deconnexion</a>
+                        <a class="nav-item btn btn-danger" href="index.php?p=deconnexion">Deconnexion</a>
                     <?php endif ?>
                 </div>
+
             </div>
         </div>
     </nav>
+    
+    <div class="mt-3">
+        <div class="container">
+            <?php if (isset($erreur)): ?>
+                <div class="alert alert-danger text-center">
+                    <h3><?= $erreur ?></h3>
 
-    <?= $pageContent ?? '' ?>
+                    <?php if (isset($erreurs) && !empty($erreurs)): ?>
+                        <ul>
+                            <?php foreach ($erreurs as $message): ?>
+                                <li><?= $message ?></li>
+                            <?php endforeach ?>
+                        </ul>
+                    <?php endif ?>
+                </div>
+            <?php endif ?>
+
+            <?php if (isset($success)): ?>
+                <div class="alert alert-success text-center">
+                    <h3><?= $success ?></h3>
+                </div>
+            <?php endif ?>
+        </div>
+
+        <?= $pageContent ?? '' ?>
+    </div>
+    
     <script src="<?= JS_UTILS . 'bootstrap.bundle.min.js' ?>"></script>
-
 </body>
 
 </html>
