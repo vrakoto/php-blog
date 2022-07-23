@@ -62,6 +62,39 @@ switch ($action) {
         }
     break;
 
+
+    case 'ajouterCommentaire':
+        if (isset($_REQUEST['idBlog'], $_POST['commentaire'])) {
+            $idBlog = (int)$_REQUEST['idBlog'];
+            $commentaire = htmlspecialchars($_POST['commentaire']);
+            if (empty(trim($commentaire))) {
+                $erreur = "Le commentaire ne doit pas être vide";
+            } else {
+                try {
+                    $utilisateur->ajouterCommentaire($idBlog, $commentaire);
+                    header('Location: ' . $_SERVER['HTTP_REFERER']);
+                    exit();
+                } catch (\Throwable $th) {
+                    $erreur = "Erreur interne rencontrée lors de l'ajout du commentaire";
+                }
+            }
+        } else {
+            header('Location:index.php?p=lesBlogs');
+            exit();
+        }
+    break;
+
+    case 'supprimerCommentaire':
+        $idCommentaire = (int)$_REQUEST['id'];
+        try {
+            $utilisateur->supprimerCommentaire($idCommentaire);
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
+        } catch (\Throwable $th) {
+            $erreur = "Erreur interne rencontrée lors de la suppression du commentaire";
+        }
+    break;
+
     default:
         $swapController = $action;
     break;

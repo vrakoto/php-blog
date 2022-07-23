@@ -24,6 +24,15 @@ class Commun {
         return $this->identifiant;
     }
 
+    function getUtilisateur(string $identifiant): array
+    {
+        $req = "SELECT nom, prenom, created_at FROM utilisateur
+                WHERE identifiant = :identifiant";
+        $p = $this->pdo->prepare($req);
+        $p->execute(['identifiant' => $identifiant]);
+        return $p->fetch();
+    }
+
     function getLesCategories(): array
     {
         $req = "SELECT intitule FROM categorie
@@ -116,6 +125,16 @@ class Commun {
         return $p->fetchAll();
     }
 
+    function getLesNouveautes(int $quantite): array
+    {
+        $req = "SELECT * FROM blog
+                ORDER BY created_at DESC
+                LIMIT " . $quantite;
+
+        $p = $this->pdo->query($req);
+        return $p->fetchAll();
+    }
+
     function getLesBlogsParCategorie(string $laCategorie): array
     {
         if ($laCategorie === 'toutes') {
@@ -127,6 +146,29 @@ class Commun {
         $p = $this->pdo->prepare($req);
 
         $p->execute(['categorie' => $laCategorie]);
+        return $p->fetchAll();
+    }
+
+    function getLeBlog(int $idBlog): array
+    {
+        $req = "SELECT * FROM blog
+                WHERE id = :idBlog";
+        $p = $this->pdo->prepare($req);
+
+        $p->execute(['idBlog' => $idBlog]);
+        return $p->fetch();
+    }
+
+    function getLesCommentairesBlog(int $idBlog): array
+    {
+        $req = "SELECT id, commentateur, commentaire, published_at,
+                nom, prenom FROM blog_commentaires
+                JOIN utilisateur on utilisateur.identifiant = blog_commentaires.commentateur
+                WHERE idBlog = :idBlog
+                ORDER BY published_at DESC";
+        $p = $this->pdo->prepare($req);
+
+        $p->execute(['idBlog' => $idBlog]);
         return $p->fetchAll();
     }
 }

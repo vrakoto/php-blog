@@ -24,4 +24,28 @@ class Utilisateur extends Commun {
             'auteur' => $this->identifiant
         ]);
     }
+
+    
+    function ajouterCommentaire(int $idBlog, string $commentaire): bool
+    {
+        $req = "INSERT INTO blog_commentaires (idBlog, commentateur, commentaire) VALUES (:idBlog, :commentateur, :commentaire)";
+        $p = $this->pdo->prepare($req);
+        return $p->execute([
+            'idBlog' => $idBlog,
+            'commentateur' => $this->identifiant,
+            'commentaire' => $commentaire
+        ]);
+    }
+
+    function supprimerCommentaire(int $idCommentaire): bool
+    {
+        $req = "DELETE FROM blog_commentaires
+                WHERE id = :idCommentaire
+                AND commentateur = :commentateur";
+        $p = $this->pdo->prepare($req);
+        return $p->execute([
+            'idCommentaire' => $idCommentaire,
+            'commentateur' => $this->identifiant
+        ]);
+    }
 }

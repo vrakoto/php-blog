@@ -23,7 +23,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?= nav_link('accueil', 'Accueil') ?>
-                    <?= nav_link('blog', 'Blog') ?>
+                    <?= nav_link('lesBlogs', 'Les Blogs') ?>
                     <?php if ($estConnecte): ?>
                         <?= nav_link('mesBlogs', 'Mes blogs') ?>
                         <?= nav_link('creationBlog', 'Créer un blog') ?>
