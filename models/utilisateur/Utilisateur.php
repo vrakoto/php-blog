@@ -48,4 +48,18 @@ class Utilisateur extends Commun {
             'commentateur' => $this->identifiant
         ]);
     }
+
+    
+    function updateParametre(string $leParam): bool
+    {
+        $req = "UPDATE utilisateur_parametres SET
+                checked = 1
+                WHERE utilisateur_identifiant = :identifiant
+                AND var = :var";
+        $p = $this->pdo->prepare($req);
+        return $p->execute([
+            'identifiant' => $this->identifiant,
+            'var' => $leParam
+        ]);
+    }
 }

@@ -14,6 +14,17 @@ class Commun {
         $this->identifiant = $_SESSION['identifiant'] ?? '';
     }
 
+    function identifiantExistant(string $identifiant_inscription): bool
+    {
+        $req = "SELECT identifiant FROM utilisateur WHERE identifiant = :identifiant";
+        $p = $this->pdo->prepare($req);
+        $p->execute([
+            'identifiant' => $identifiant_inscription
+        ]);
+
+        return !empty($p->fetch());
+    }
+
     function estConnecte(): bool
     {
         return !empty($this->identifiant);
@@ -26,11 +37,20 @@ class Commun {
 
     function getUtilisateur(string $identifiant): array
     {
-        $req = "SELECT nom, prenom, created_at FROM utilisateur
+        $req = "SELECT identifiant, avatar, nom, prenom, created_at FROM utilisateur
                 WHERE identifiant = :identifiant";
         $p = $this->pdo->prepare($req);
         $p->execute(['identifiant' => $identifiant]);
         return $p->fetch();
+    }
+
+    function getLesParametresUtilisateur(string $identifiant): array
+    {
+        $req = "SELECT * FROM utilisateur_parametres
+                WHERE utilisateur_identifiant = :identifiant";
+        $p = $this->pdo->prepare($req);
+        $p->execute(['identifiant' => $identifiant]);
+        return $p->fetchAll();
     }
 
     function getLesCategories(): array
@@ -162,7 +182,7 @@ class Commun {
     function getLesCommentairesBlog(int $idBlog): array
     {
         $req = "SELECT id, commentateur, commentaire, published_at,
-                nom, prenom FROM blog_commentaires
+                avatar, nom, prenom FROM blog_commentaires
                 JOIN utilisateur on utilisateur.identifiant = blog_commentaires.commentateur
                 WHERE idBlog = :idBlog
                 ORDER BY published_at DESC";

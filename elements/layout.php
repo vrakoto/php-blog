@@ -57,12 +57,14 @@
                             <?php endforeach ?>
                         </ul>
                     <?php endif ?>
+                    <button class="btn btn-primary" onclick="history.back()">Revenir en arrière</button>
                 </div>
             <?php endif ?>
 
             <?php if (!empty($success)): ?>
                 <div class="alert alert-success text-center">
                     <h3><?= $success ?></h3>
+                    <button class="btn btn-primary" onclick="history.back()">Revenir en arrière</button>
                 </div>
             <?php endif ?>
         </div>

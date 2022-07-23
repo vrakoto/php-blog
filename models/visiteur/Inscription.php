@@ -22,18 +22,6 @@ class Inscription extends Commun {
         return empty($this->getErreurs());
     }
 
-
-    function identifiantExistant(string $identifiant_inscription): bool
-    {
-        $req = "SELECT identifiant FROM utilisateur WHERE identifiant = :identifiant";
-        $p = $this->pdo->prepare($req);
-        $p->execute([
-            'identifiant' => $identifiant_inscription
-        ]);
-
-        return !empty($p->fetch());
-    }
-
     function getErreurs(): array
     {
         $erreurs = [];

@@ -10,10 +10,52 @@ switch ($action) {
         $utilisateur->deconnexion();
     break;
 
+    case 'parametres':
+        $infosUser = $pdo->getUtilisateur($monIdentifiant);
+        $lesParams = $pdo->getLesParametresUtilisateur($monIdentifiant);
+        require_once COMPONENTS . 'variablesUtilisateur.php';
+        require_once VUES_UTILISATEUR . 'parametres.php';
+    break;
+
+    case 'updateMonProfil':
+        if (isset($_POST['avatar'], $_POST['nom'], $_POST['prenom'])) {
+            require_once MODELS_UTILISATEUR . 'Profil.php';
+            $avatar = htmlspecialchars($_POST['avatar']);
+            $nom = htmlspecialchars($_POST['nom']);
+            $prenom = htmlspecialchars($_POST['prenom']);
+
+            $profil = new Profil($avatar, $nom, $prenom);
+
+            if (!$profil->verifierProfil()) {
+                $erreur = "Les informations sont incorrectes, aucun changement n'a été effectué";
+                $erreurs = $profil->getErreurs();
+            } else {
+                try {
+                    $profil->update();
+                    $success = "Profil modifié !";
+                } catch (\Throwable $th) {
+                    $erreur = "Erreur interne rencontrée lors de la mise à jour du profil";
+                }
+            }
+        }
+
+        /* if (isset($_POST['params'])) {
+            $lesParams = $pdo->getLesParametresUtilisateur($monIdentifiant);
+            foreach ($lesParams as $param) {
+                require COMPONENTS . 'variablesParametres.php';
+                try {
+                    $utilisateur->updateParametre($varParam, $checked);
+                } catch (\Throwable $th) {
+                    var_dump($th);
+                }
+            }
+        } */
+    break;
+
     case 'creationBlog':
         $erreurs = [];
         $categories = $pdo->getLesCategories();
-        if (!empty($_POST)) {
+        if (isset($_POST['titreBlog'], $_POST['categorie'], $_POST['description'])) {
             require_once MODELS_UTILISATEUR . 'CreationBlog.php';
 
             $titreBlog = htmlspecialchars($_POST['titreBlog']);

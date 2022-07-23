@@ -43,6 +43,22 @@ function form_input_label(string $idRef, string $typeInput, string $titre, array
 HTML;
 }
 
+
+
+function form_checkbox(string $var, string $titre, int $checked = 0): string
+{
+    $checking = '';
+    if ($checked !== 0) {
+        $checking = "checked";
+    }
+    return <<<HTML
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="params[]" value="$var" id="$var" $checking>
+        <label class="form-check-label" for="$var">$titre</label>
+    </div>
+HTML;
+}
+
 function removeSpecialChr(string $input) {
     $string = str_replace(' ', ' ', $input); // Replaces all spaces with hyphens.
     return preg_replace('/[^A-Za-z0-9\-?!()]/', '', $string); // Removes special chars.
