@@ -1,3 +1,18 @@
+.leBlog {
+    width: 300px;
+    height: 450px;
+}
+
+.leBlog .card-body {
+    position: relative;
+}
+
+.leBlog .bottomCard {
+    /* position: absolute;
+    bottom: 10px;
+    left: 10px; */
+}
+
 .filtrerRechercheCategorie {
     display: none !important;
 }

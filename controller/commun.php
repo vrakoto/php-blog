@@ -34,9 +34,14 @@ if (!empty($swapController)) {
                     $blog = $pdo->getLeBlog($id);
                     $lesCommentaires = $pdo->getLesCommentairesBlog($id);
                     require_once COMPONENTS .  'variablesBlog.php';
-                    require_once VUES . 'consulterBlog.php';
+
+                    if ($privation <= 0 || $monBlog || $autorise) {
+                        require_once VUES . 'consulterBlog.php';
+                    } else {
+                        $erreur = "L'accès à ce blog est restreint, seuls les utilisateurs invités ont le droit d'y accéder";   
+                    }
                 } catch (\Throwable $th) {
-                    $erreur = "Erreur interne rencontrée lors de la récupération des informations du blog";
+                    $erreur = "Le blog n°" . $id . " n'existe pas";
                 }
             } else {
                 header('Location:index.php?p=lesBlogs');

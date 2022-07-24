@@ -17,6 +17,77 @@ switch ($action) {
         require_once VUES_UTILISATEUR . 'parametres.php';
     break;
 
+    case 'parametresBlog':
+        if (isset($_REQUEST['id'])) {
+            $idBlog = (int)$_REQUEST['id'];
+            
+            if (!$pdo->estMonBlog($idBlog)) {
+                $erreur = "Ce blog ne vous appartient pas";
+            }
+
+            if (empty($erreur)) {
+                $potentielsInviter = $utilisateur->getLesUtilisateursAInviter($idBlog);
+                $lesUtilisateursAcces = $utilisateur->getLesUtilisateursInvites($idBlog);
+                $varAddUser = "utilisateurs_ajouter";
+                $varDeleteUser = "utilisateurs_retirer";
+
+                if (isset($_REQUEST['ajouterPrivation'], $_REQUEST['id'])) {
+                    $idBlog = (int)$_REQUEST['id'];
+    
+                    try {
+                        $utilisateur->ajouterPrivation($idBlog);
+                        header('Location:index.php?p=blog&id=' . $idBlog);
+                        exit();
+                    } catch (\Throwable $th) {
+                        $erreur = "Erreur interne rencontrée lors de la privatisation du blog";
+                    }
+                }
+                if (isset($_REQUEST['retirerPrivation'], $_REQUEST['id'])) {
+                    $idBlog = (int)$_REQUEST['id'];
+        
+                    try {
+                        $utilisateur->retirerPrivation($idBlog);
+                        header('Location:index.php?p=blog&id=' . $idBlog);
+                        exit();
+                    } catch (\Throwable $th) {
+                        $erreur = "Erreur interne rencontrée lors de la mise en publication publique du blog";
+                    }
+                }
+
+
+    
+                if (isset($_POST[$varAddUser])) {
+                    $lesUtilisateursAutorises = $_POST[$varAddUser];
+                    try {
+                        foreach ($lesUtilisateursAutorises as $identifiant) {
+                            $utilisateur->autoriserAcces($idBlog, $identifiant);
+                        }
+                        header('Location:index.php?p=parametresBlog&id=' . $idBlog);
+                        exit();
+                    } catch (\Throwable $th) {
+                        $erreur = "Erreur interne rencontrée lors de la mise à jour des paramètres du blog";
+                    }
+                }
+    
+                if (isset($_POST[$varDeleteUser])) {
+                    $lesUtilisateursRetires = $_POST[$varDeleteUser];
+    
+                    try {
+                        foreach ($lesUtilisateursRetires as $identifiant) {
+                            $utilisateur->retirerAcces($idBlog, $identifiant);
+                        }
+                        header('Location:index.php?p=parametresBlog&id=' . $idBlog);
+                        exit();
+                    } catch (\Throwable $th) {
+                        $erreur = "Erreur interne rencontrée lors de la mise à jour des paramètres du blog";
+                    }
+                }
+    
+                require_once VUES_UTILISATEUR . 'parametresBlog.php';
+            }
+        }
+    break;
+
     case 'updateMonProfil':
         if (isset($_POST['avatar'], $_POST['nom'], $_POST['prenom'])) {
             require_once MODELS_UTILISATEUR . 'Profil.php';
@@ -55,7 +126,8 @@ switch ($action) {
     case 'creationBlog':
         $erreurs = [];
         $categories = $pdo->getLesCategories();
-        if (isset($_POST['titreBlog'], $_POST['categorie'], $_POST['description'])) {
+
+        if (isset($_POST['titreBlog'], $_POST['description'])) {
             require_once MODELS_UTILISATEUR . 'CreationBlog.php';
 
             $titreBlog = htmlspecialchars($_POST['titreBlog']);
@@ -66,7 +138,13 @@ switch ($action) {
             }
             $description = htmlspecialchars($_POST['description']);
 
-            $blog = new CreationBlog($titreBlog, $categorie, $description);
+            if (isset($_POST['blogVisibilite'])) {
+                $visibiliteBlog = 1;
+            } else {
+                $visibiliteBlog = 0;
+            }
+
+            $blog = new CreationBlog($titreBlog, $categorie, $description, $visibiliteBlog);
             
             if (!$blog->verifierCreation()) {
                 $erreur = 'Le formulaire est incorrect :';
@@ -85,22 +163,38 @@ switch ($action) {
     break;
 
     case 'mesBlogs':
-        $lesBlogs = $utilisateur->getLesBlogsUtilisateur($monIdentifiant);
-        if (count($lesBlogs) <= 0) {
-            $noItems = "Vous n'avez aucun blog.";
+        try {
+            $lesBlogs = $utilisateur->getLesBlogsUtilisateur($monIdentifiant);
+            if (count($lesBlogs) <= 0) {
+                $noItems = "Vous n'avez aucun blog.";
+            }
+            require_once VUES_UTILISATEUR . 'mesBlogs.php';
+        } catch (\Throwable $th) {
+            $erreur = "Erreur interne lors de la récupération de vos blogs";
         }
-        require_once VUES_UTILISATEUR . 'mesBlogs.php';
     break;
 
 
     case 'supprimerBlog':
-        $idBlog = (int)$_REQUEST['id'];
-        try {
-            $utilisateur->supprimerBlog($idBlog);
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-            exit();
-        } catch (\Throwable $th) {
-            $erreur = "Erreur interne rencontrée lors de la suppression du blog";
+        if (isset($_REQUEST['id'])) {
+            $idBlog = (int)$_REQUEST['id'];
+
+            if (!$pdo->estMonBlog($idBlog)) {
+                $erreur = "Ce blog ne vous appartient pas";
+            } else {
+                try {
+                    $utilisateur->supprimerBlog($idBlog);
+    
+                    $redirect = htmlspecialchars($_SERVER['HTTP_REDIRECT']);
+                    if (isset($_REQUEST['redirect'])) {
+                        $redirect = htmlspecialchars($_REQUEST['redirect']);
+                    }
+                    header('Location:' . $redirect);
+                    exit();
+                } catch (\Throwable $th) {
+                    $erreur = "Erreur interne rencontrée lors de la suppression du blog";
+                }
+            }
         }
     break;
 

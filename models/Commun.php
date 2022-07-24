@@ -108,6 +108,20 @@ class Commun {
     }
 
 
+    function estAutorise(int $idBlog): bool
+    {
+        $req = "SELECT demandeur, acces FROM blog_acces
+                WHERE idBlog = :idBlog
+                AND demandeur = :currentIdentifiant";
+        $p = $this->pdo->prepare($req);
+        $p->execute([
+            'idBlog' => $idBlog,
+            'currentIdentifiant' => $this->identifiant
+        ]);
+        return !empty($p->fetch());
+    }
+
+
     function estMonBlog(int $idBlog): bool
     {
         $req = "SELECT auteur FROM blog

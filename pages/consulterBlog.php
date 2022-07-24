@@ -1,19 +1,44 @@
 <div class="mt-5 container consulterBlog">
     <div class="row">
-
-        <div class="col-sm blog">
+        <div class="col-lg-8 blog">
             <h1 class="text-center mt-3 mb-3"><?= $titre ?></h1>
             <div class="container text-justify">
                 <p><?= $description ?></p>
             </div>
         </div>
 
-        <div class="col-sm blog p-0">
+        <div class="col-lg-4 blog p-0">
             <img src="https://static.pexels.com/photos/7096/people-woman-coffee-meeting.jpg" class="img-fluid" alt="Image du blog">
             <div class="p-2">
-                <h3 class="mb-0">Créé par <a href="index.php?p=user&id=<?= $auteur ?>"><?= $auteur ?></a></h3>
-                <div>Catégorie: <a href="index.php?p=blog&categorie=<?= strtolower($categorie) ?>"><?= strtoupper($categorie) ?></a></div>
-                <div>Date de publication: <?= $dateCreation ?></div>
+                <div class="d-flex align-items-center justify-content-around">
+                    <p class="mt-2 mb-2">Auteur</p>
+                    <p class="mt-2 mb-2"><?= ($monBlog) ? "<span class='text-success'><i class='fa-solid fa-check'></i> Moi</span>" : "<a href='index.php?p=user&id=$auteur'>$auteur</a>" ?></p>
+                </div>
+
+                <hr class="m-0">
+
+                <div class="d-flex align-items-center justify-content-around">
+                    <p class="mt-2 mb-2">Catégorie</p>
+                    <p class="mt-2 mb-2"><a href="index.php?p=lesBlogs&categorie=<?= strtolower($categorie) ?>"><?= strtoupper($categorie) ?></a></p>
+                </div>
+
+                <hr class="m-0">
+
+                <div class="d-flex align-items-center justify-content-around">
+                    <p class="mt-2 mb-2">Date de publication</p>
+                    <p class="mt-2 mb-2"><?= $dateCreation ?></a></p>
+                </div>
+
+                <?php if ($monBlog): ?>
+                    <div class="text-center">
+                        <?php if ($privation > 0): ?>
+                            <a href="index.php?p=parametresBlog&id=<?= $id ?>" class="btn btn-secondary">Paramètres</a>
+                        <?php else: ?>
+                            <a href="index.php?p=parametresBlog&id=<?= $id ?>&ajouterPrivation" class="btn btn-secondary">Rendre ce blog privé</a>
+                        <?php endif ?>
+                        <a href="index.php?p=supprimerBlog&id=<?= $id ?>&redirect=index.php?p=mesBlogs" class="btn btn-danger">Supprimer ce blog</a>
+                    </div>
+                <?php endif ?>
             </div>
         </div>
 
@@ -22,32 +47,31 @@
 
             <div class="container">
 
-                <?php if ($estConnecte): ?>
+                <?php if ($estConnecte) : ?>
                     <form class="d-flex flex-row add-comment-section mt-4 mb-4" action="index.php?p=ajouterCommentaire&idBlog=<?= $id ?>" method="POST">
-                        <img class="img-fluid img-responsive rounded-circle mr-2" src="https://i.imgur.com/qdiP4DB.jpg" width="38">
                         <input type="text" name="commentaire" class="form-control mr-3" placeholder="Ajouter un commentaire" required>
                         <button class="btn btn-success" type="submit">Comment</button>
                     </form>
-                <?php else: ?>
+                <?php else : ?>
                     <div class="text-center">
                         <a href="index.php?p=connexion" title="Accéder à la page de connexion">Authentifiez-vous pour publier un commentaire</a>
                     </div>
                 <?php endif ?>
 
-                <?php foreach ($lesCommentaires as $utilisateur) : 
+                <?php foreach ($lesCommentaires as $utilisateur) :
                     require COMPONENTS . 'variablesCommentaireBlog.php';
                 ?>
                     <div class="border mb-3">
                         <div class="d-flex justify-content-between m-2">
                             <div class="d-flex flex-row align-items-center">
-                                <img src="https://i.imgur.com/yTFUilP.jpg" alt="Avatar de l'utilisateur" class="rounded-circle" width="40" height="40">
+                                <img src="<?= $avatar ?>" alt="Avatar de l'utilisateur" class="rounded-circle" width="40" height="40">
                                 <div>
                                     <a title="Consulter le profil de <?= $identifiantCommentateur ?>" href="index.php?p=utilisateur&identifiant=<?= $identifiantCommentateur ?>" class="mb-0"><?= $nom . ' ' . $prenom ?></a>
                                     <p class="form-text mt-0"><?= $datePublication ?></p>
                                 </div>
                             </div>
 
-                            <?php if ($estConnecte): ?>
+                            <?php if ($monCommentaire || $monBlog) : ?>
                                 <a href="index.php?p=supprimerCommentaire&id=<?= $idCommentaire ?>" class="delete" title="Supprimer ce commentaire"><i class="fa-solid fa-trash"></i></a>
                             <?php endif ?>
                         </div>

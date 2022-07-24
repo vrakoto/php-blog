@@ -13,6 +13,80 @@ class Utilisateur extends Commun {
         exit();
     }
 
+    function getLesUtilisateursAInviter(int $idBlog): array
+    {
+        $req = "SELECT identifiant, avatar, nom, prenom, created_at FROM utilisateur
+                WHERE NOT identifiant = :currentIdentifiant
+                AND identifiant NOT IN (SELECT demandeur FROM blog_acces WHERE idBlog = :idBlog)
+                ORDER BY identifiant";
+        $p = $this->pdo->prepare($req);
+        $p->execute([
+            'currentIdentifiant' => $this->identifiant,
+            'idBlog' => $idBlog
+        ]);
+        return $p->fetchAll();
+    }
+
+    function getLesUtilisateursInvites(int $idBlog): array
+    {
+        $req = "SELECT nom, prenom,
+                idBlog, demandeur, acces
+                FROM blog_acces
+                JOIN utilisateur on utilisateur.identifiant = blog_acces.demandeur
+                WHERE idBlog = :idBlog
+                AND acces = 1";
+        $p = $this->pdo->prepare($req);
+        $p->execute(['idBlog' => $idBlog]);
+        return $p->fetchAll();
+    }
+
+    function autoriserAcces(int $idBlog, string $identifiant): bool
+    {
+        $req = "INSERT INTO blog_acces (idBlog, demandeur, acces) VALUES (:idBlog, :demandeur, 1)";
+        $p = $this->pdo->prepare($req);
+        return $p->execute([
+            'idBlog' => $idBlog,
+            'demandeur' => $identifiant
+        ]);
+    }
+
+    function retirerAcces(int $idBlog, string $identifiant): bool
+    {
+        $req = "DELETE FROM blog_acces
+                WHERE idBlog = :idBlog
+                AND demandeur = :demandeur";
+        $p = $this->pdo->prepare($req);
+        return $p->execute([
+            'idBlog' => $idBlog,
+            'demandeur' => $identifiant
+        ]);
+    }
+
+
+    function ajouterPrivation(int $idBlog): bool
+    {
+        $req = "UPDATE blog SET privation = 1
+                WHERE id = :idBlog
+                AND auteur = :auteur";
+        $p = $this->pdo->prepare($req);
+        return $p->execute([
+            'idBlog' => $idBlog,
+            'auteur' => $this->identifiant
+        ]);
+    }
+
+    function retirerPrivation(int $idBlog): bool
+    {
+        $req = "UPDATE blog SET privation = 0
+                WHERE id = :idBlog
+                AND auteur = :auteur";
+        $p = $this->pdo->prepare($req);
+        return $p->execute([
+            'idBlog' => $idBlog,
+            'auteur' => $this->identifiant
+        ]);
+    } 
+
     function supprimerBlog(int $idBlog): bool
     {
         $req = "DELETE FROM blog
