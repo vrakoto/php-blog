@@ -22,12 +22,13 @@ class Profil extends Commun {
     function getErreurs(): array
     {
         $erreurs = [];
-        $extensionsAllowed = array("png", "jpg", "jpeg", "gif");
-        $avatarLink = explode(".", $this->avatar);
-        $imgExtension = end($avatarLink);
-
-        if (!in_array($imgExtension, $extensionsAllowed)) {
-            $erreurs['avatar'] = "L'URL ou l'extension de l'image est invalide. Seuls PNG, JPG/JPEG et GIF sont autorisés";
+        $extensionsAllowed = ["png", "jpg", "jpeg", "gif", "svg", "webp"];
+        
+        $erreurs['avatar'] = "L'extension de l'image est invalide. L'extension de l'URL doit être figuré dans cette liste : " . implode(', ', $extensionsAllowed);
+        foreach ($extensionsAllowed as $extension) {
+            if (str_contains($this->avatar, $extension)) {
+                unset($erreurs['avatar']);
+            }
         }
         if (strlen($this->nom) < 2) {
             $erreurs['nom'] = "Le nom est trop court";

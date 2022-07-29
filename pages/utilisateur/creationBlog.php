@@ -1,7 +1,7 @@
 <form class="container border p-3 mt-5" action="index.php?p=creationBlog" method="POST">
     <h3 class="text-center mb-3">Veuillez remplir le formulaire</h3>
 
-    <?= form_input_label('titreBlog', 'text', 'Titre du blog', $erreurs, true, 'autofocus') ?>
+    <?= form_input_label('titreBlog', 'text', 'Titre du blog', $erreurs, true) ?>
 
     <div class="mb-4 mt-4">
         <input type="text" class="form-input mb-2" oninput="rechercherCategorie(this)" placeholder="Rechercher une catégorie">

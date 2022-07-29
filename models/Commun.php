@@ -53,6 +53,19 @@ class Commun {
         return $p->fetchAll();
     }
 
+    function getValeurParametre(string $identifiant, string $var): int
+    {
+        $req = "SELECT checked FROM utilisateur_parametres
+                WHERE utilisateur_identifiant = :identifiant
+                AND var = :var";
+        $p = $this->pdo->prepare($req);
+        $p->execute([
+            'identifiant' => $identifiant,
+            'var' => $var
+        ]);
+        return $p->fetch()['checked'];
+    }
+
     function getLesCategories(): array
     {
         $req = "SELECT intitule FROM categorie
@@ -62,48 +75,83 @@ class Commun {
     }
 
     
-    function nbCreatedBlogsToday(): int
+    function nbCreatedBlogsToday(string $identifiant = NULL): int
     {
+        $params = [];
         $req = "SELECT count(id) as nbBlogs FROM blog
-                WHERE (`created_at` > DATE_SUB(now(), INTERVAL 1 DAY));";
+                WHERE (`created_at` > DATE_SUB(now(), INTERVAL 1 DAY))";
 
-        $p = $this->pdo->query($req);
+        if (!empty($identifiant)) {
+            $req .= " AND auteur = :identifiant";
+            $params['identifiant'] = $identifiant;
+        }
+
+        $p = $this->pdo->prepare($req);
+        $p->execute($params);
         return $p->fetch()['nbBlogs'];
     }
 
-    function nbBlogsThisWeek(): int
+    function nbBlogsThisWeek(string $identifiant = NULL): int
     {
+        $params = [];
         $req = "SELECT count(id) as nbBlogs FROM blog
                 WHERE YEARWEEK(`created_at`, 1) = YEARWEEK(CURDATE(), 1)";
 
-        $p = $this->pdo->query($req);
+        if (!empty($identifiant)) {
+            $req .= " AND auteur = :identifiant";
+            $params['identifiant'] = $identifiant;
+        }
+
+        $p = $this->pdo->prepare($req);
+        $p->execute($params);
         return $p->fetch()['nbBlogs'];
     }
 
-    function nbBlogsThisMonth(): int
+    function nbBlogsThisMonth(string $identifiant = NULL): int
     {
+        $params = [];
         $req = "SELECT count(id) as nbBlogs FROM blog 
                 WHERE MONTH(created_at) = MONTH(CURRENT_DATE())
                 AND YEAR(created_at) = YEAR(CURRENT_DATE())";
 
-        $p = $this->pdo->query($req);
+        if (!empty($identifiant)) {
+            $req .= " AND auteur = :identifiant";
+            $params['identifiant'] = $identifiant;
+        }
+
+        $p = $this->pdo->prepare($req);
+        $p->execute($params);
         return $p->fetch()['nbBlogs'];
     }
 
-    function nbBlogsThisYear(): int
+    function nbBlogsThisYear(string $identifiant = NULL): int
     {
+        $params = [];
         $req = "SELECT count(id) as nbBlogs FROM blog
                 WHERE YEAR(created_at) = YEAR(CURDATE())";
 
-        $p = $this->pdo->query($req);
+        if (!empty($identifiant)) {
+            $req .= " AND auteur = :identifiant";
+            $params['identifiant'] = $identifiant;
+        }
+
+        $p = $this->pdo->prepare($req);
+        $p->execute($params);
         return $p->fetch()['nbBlogs'];
     }
 
-    function nbBlogsTotal(): int
+    function nbBlogsTotal(string $identifiant = NULL): int
     {
+        $params = [];
         $req = "SELECT count(id) as nbBlogs FROM blog";
 
-        $p = $this->pdo->query($req);
+            if (!empty($identifiant)) {
+                $req .= " WHERE auteur = :identifiant";
+                $params['identifiant'] = $identifiant;
+            }
+
+        $p = $this->pdo->prepare($req);
+        $p->execute($params);
         return $p->fetch()['nbBlogs'];
     }
 
@@ -136,11 +184,15 @@ class Commun {
         return !empty($p->fetch()); 
     }
 
-    function getLesBlogsUtilisateur(string $identifiant): array
+    function getLesBlogsUtilisateur(string $identifiant, int $limit = 0): array
     {
+        
         $req = "SELECT * FROM blog
                 WHERE auteur = :identifiant
                 ORDER BY created_at DESC";
+        if ($limit > 0) {
+            $req .= " LIMIT " . $limit;
+        }
         $p = $this->pdo->prepare($req);
 
         $p->execute(['identifiant' => $identifiant]);
@@ -192,17 +244,39 @@ class Commun {
         $p->execute(['idBlog' => $idBlog]);
         return $p->fetch();
     }
-
-    function getLesCommentairesBlog(int $idBlog): array
+    
+    /**
+     * getLesCommentaires
+     *
+     * @param  string|int $elementSearch
+     * Si chaine de caractère, alors récupère seulement les commentaires de l'utilisateur spécifié
+     * Si valeur numérique, alors récupère seulement les commentaires du blogs spécifié (par id) 
+     * 
+     * @param  int $limit
+     * @return array
+     */
+    function getLesCommentaires(string|int $elementSearch, int $limit = 0): array
     {
-        $req = "SELECT id, commentateur, commentaire, published_at,
+        $prepareArgs = [];
+        $req = "SELECT id, idBlog, commentateur, commentaire, published_at,
                 avatar, nom, prenom FROM blog_commentaires
-                JOIN utilisateur on utilisateur.identifiant = blog_commentaires.commentateur
-                WHERE idBlog = :idBlog
-                ORDER BY published_at DESC";
-        $p = $this->pdo->prepare($req);
+                JOIN utilisateur on utilisateur.identifiant = blog_commentaires.commentateur";
 
-        $p->execute(['idBlog' => $idBlog]);
+        if (!is_int($elementSearch)) {
+            $req .= " WHERE commentateur = :identifiant";
+            $prepareArgs['identifiant'] = $elementSearch;
+        } else {
+            $req .= " WHERE idBlog = :idBlog";
+            $prepareArgs['idBlog'] = $elementSearch;
+        }
+        $req .= " ORDER BY published_at DESC";
+
+        if ($limit > 0) {
+            $req .= " LIMIT " . $limit;
+        }
+
+        $p = $this->pdo->prepare($req);
+        $p->execute($prepareArgs);
         return $p->fetchAll();
     }
 }

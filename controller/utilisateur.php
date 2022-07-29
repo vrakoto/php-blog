@@ -110,17 +110,26 @@ switch ($action) {
             }
         }
 
-        /* if (isset($_POST['params'])) {
-            $lesParams = $pdo->getLesParametresUtilisateur($monIdentifiant);
+        $lesParams = $pdo->getLesParametresUtilisateur($monIdentifiant);
+        if (isset($_POST['params'])) {
+            try {
+                foreach ($_POST['params'] as $param) {
+                    $leParam = htmlspecialchars($param);
+                    $utilisateur->updateParametre($param);
+                }
+            } catch (\Throwable $th) {
+                $erreur = "Erreur interne rencontrée lors de la mise à jour de votre paramètre de visibilité";
+            }
+        } else {
             foreach ($lesParams as $param) {
                 require COMPONENTS . 'variablesParametres.php';
                 try {
-                    $utilisateur->updateParametre($varParam, $checked);
+                    $utilisateur->updateParametre($varParam, 0);
                 } catch (\Throwable $th) {
-                    var_dump($th);
+                    $erreur = "Erreur interne rencontrée lors de la mise à jour de votre paramètre de visibilité";
                 }
             }
-        } */
+        }
     break;
 
     case 'creationBlog':
@@ -161,19 +170,6 @@ switch ($action) {
         }
         require_once VUES_UTILISATEUR . 'creationBlog.php';
     break;
-
-    case 'mesBlogs':
-        try {
-            $lesBlogs = $utilisateur->getLesBlogsUtilisateur($monIdentifiant);
-            if (count($lesBlogs) <= 0) {
-                $noItems = "Vous n'avez aucun blog.";
-            }
-            require_once VUES_UTILISATEUR . 'mesBlogs.php';
-        } catch (\Throwable $th) {
-            $erreur = "Erreur interne lors de la récupération de vos blogs";
-        }
-    break;
-
 
     case 'supprimerBlog':
         if (isset($_REQUEST['id'])) {
@@ -223,9 +219,21 @@ switch ($action) {
     case 'supprimerCommentaire':
         $idCommentaire = (int)$_REQUEST['id'];
         try {
-            $utilisateur->supprimerCommentaire($idCommentaire);
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-            exit();
+            $searchComs = $pdo->getLesCommentaires($monIdentifiant);
+            foreach ($searchComs as $com) {
+                if ($com['commentateur'] === $monIdentifiant) {
+                    $can_delete = TRUE;
+                } else if ($utilisateur->estMonBlog($com['idBlog'])) {
+                    $can_delete = TRUE;
+                }
+            }
+            if (!isset($can_delete)) {
+                $erreur = "Commentaire introuvable.";
+            } else {
+                $utilisateur->supprimerCommentaire($idCommentaire);
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+                exit();
+            }
         } catch (\Throwable $th) {
             $erreur = "Erreur interne rencontrée lors de la suppression du commentaire";
         }

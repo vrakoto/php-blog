@@ -5,6 +5,7 @@
                 <div class="card-body text-center">
                     <img src="<?= $avatar ?>" alt="Mon avatar" class="rounded-circle img-fluid" style="width: 150px;">
                     <h5 class="my-3"><?= $identifiant ?></h5>
+                    <a href="index.php?p=utilisateur&identifiant=<?= $monIdentifiant ?>">Consulter mon profil</a>
                 </div>
             </div>
 
@@ -27,11 +28,15 @@
             <form class="card mb-4" action="index.php?p=updateMonProfil" method="POST">
                 <div class="card-body">
                     <div class="row d-flex align-items-center">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <p class="mb-0">Avatar (URL uniquement)</p>
                         </div>
-                        <div class="col-sm-10">
-                            <input name="avatar" type="text" class="form-control" value="<?= $avatar ?>">
+                        <div class="col-sm-7">
+                            <input name="avatar" id="imgURL" type="text" class="form-control" value="<?= $avatar ?>">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <span class="btn btn-warning" onclick="baseURLImage()">Reset URL</span>
                         </div>
                     </div>
 

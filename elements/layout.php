@@ -25,7 +25,7 @@
                     <?= nav_link('accueil', 'Accueil') ?>
                     <?= nav_link('lesBlogs', 'Les Blogs') ?>
                     <?php if ($estConnecte): ?>
-                        <?= nav_link('mesBlogs', 'Mes blogs') ?>
+                        <?= nav_link('lesBlogs&identifiant=' . $monIdentifiant, 'Mes blogs') ?>
                         <?= nav_link('creationBlog', 'Créer un blog') ?>
                     <?php endif ?>
                 </ul>

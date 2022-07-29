@@ -114,24 +114,37 @@ class Utilisateur extends Commun {
     function supprimerCommentaire(int $idCommentaire): bool
     {
         $req = "DELETE FROM blog_commentaires
-                WHERE id = :idCommentaire
-                AND commentateur = :commentateur";
+                WHERE id = :idCommentaire";
         $p = $this->pdo->prepare($req);
         return $p->execute([
-            'idCommentaire' => $idCommentaire,
-            'commentateur' => $this->identifiant
+            'idCommentaire' => $idCommentaire
         ]);
     }
 
+    function estMonCommentaire(int $idCommentaire): bool
+    {
+        $req = "SELECT commentateur FROM blog_commentaires
+                WHERE commentateur = :idCommentaire
+                AND commentateur = :identifiant";
+
+        $p = $this->pdo->prepare($req);
+        $p->execute([
+            'idCommentaire' => $idCommentaire,
+            'identifiant' => $this->identifiant
+        ]);
+        return !empty($p->fetch());
+    }
+
     
-    function updateParametre(string $leParam): bool
+    function updateParametre(string $leParam, int $value = 1): bool
     {
         $req = "UPDATE utilisateur_parametres SET
-                checked = 1
+                checked = :value
                 WHERE utilisateur_identifiant = :identifiant
                 AND var = :var";
         $p = $this->pdo->prepare($req);
         return $p->execute([
+            'value' => $value,
             'identifiant' => $this->identifiant,
             'var' => $leParam
         ]);

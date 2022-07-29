@@ -1,23 +1,24 @@
 <?php foreach ($lesBlogs as $blog) :
     require 'variablesBlog.php';
 ?>
-    <div class="leBlog card mx-3 mt-3" style="width: 18rem;">
-        <img src="https://static.pexels.com/photos/7096/people-woman-coffee-meeting.jpg" class="card-img-top" alt="Image d'un blog">
+    <div class="leBlog card mx-3 mt-3">
+        <!-- <img src="https://static.pexels.com/photos/7096/people-woman-coffee-meeting.jpg" class="card-img-top" alt="Image d'un blog"> -->
+        <div class="form-text m-0">Par: <a href="index.php?p=utilisateur&identifiant=<?= $auteur ?>"><?= $auteur ?></a> le <?= $dateCreation ?></div>
         <div class="card-body">
-            <h5 class="card-title" title="<?= $titre ?>"><?= (strlen($titre) > 28) ? substr($titre,0,35).'...' : $titre ?></h5>
-            <p><?= (strlen($description) > 128) ? substr($description,0,125).'...' : $description ?></p>
+            <h5 class="titre" title="<?= $titre ?>"><?= (strlen($titre) > 28) ? substr($titre,0,35).'...' : $titre ?></h5>
+            <p class="form-text"><?= $descriptionCastedBlog ?></p>
 
             <div class="bottomCard">
                 <?php if ($privation !== 0) : ?>
 
                     <?php if (!$monBlog) : ?>
                         <?php if ($autorise) : ?>
-                            <div class="alert alert-success text-center">
+                            <div class="alert alert-success text-center mb-1">
                                 <i class='fa-solid fa-check'></i> Autorisé
                             </div>
                             <a href="index.php?p=blog&id=<?= $id ?>" class="btn btn-primary">Consulter</a>
                         <?php else : ?>
-                            <div class="alert alert-danger text-center">
+                            <div class="alert alert-danger text-center mb-1">
                                 <i class="fa-solid fa-lock"></i> Ce blog est restreint
                             </div>
                         <?php endif ?>

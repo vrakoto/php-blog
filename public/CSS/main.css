@@ -1,16 +1,15 @@
 .leBlog {
     width: 300px;
-    height: 450px;
+    height: 300px;
+}
+
+.leBlog .titre {
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 .leBlog .card-body {
     position: relative;
-}
-
-.leBlog .bottomCard {
-    /* position: absolute;
-    bottom: 10px;
-    left: 10px; */
 }
 
 .filtrerRechercheCategorie {
@@ -21,6 +20,33 @@
     /* background-color: rgba(112.520718,44.062154,249.437846, 0.1); */
     background-color: antiquewhite;
     border: 1px solid rgba(112.520718,44.062154,249.437846, 0.25)
+}
+
+
+.userProfil-header {
+    background-color: #000;
+    height:200px;
+}
+
+.userProfil-avatar {
+    width: 150px;
+    min-height: 150px;
+    max-height: 150px;
+    z-index: 1;
+}
+
+.userProfil-stats {
+    background-color: #f8f9fa;
+    height: 100px;
+}
+.userProfil-stats.otherUser {
+    height: 150px;
+}
+
+.gradient-custom-2 {
+    /* background: #fbc2eb;
+    background: -webkit-linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238, 1));
+    background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238, 1)); */
 }
 
 .delete {

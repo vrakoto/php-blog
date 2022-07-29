@@ -1,9 +1,13 @@
 <div class="container mt-5">
-    <?php if (isset($noItems)): ?>
+    <?php if (!empty($noItems)): ?>
         <div class="text-center">
-            <h1><?= $noItems ?></h1>
-            <br>
-            <a href="index.php?p=creationBlog" class="btn btn-success">Créez votre premier blog !</a>
+            <?php if ($identifiant === $monIdentifiant): ?>
+                <h1>Vous n'avez aucun blog.</h1>
+                <br>
+                <a href="index.php?p=creationBlog" class="btn btn-success">Créez votre premier blog !</a>
+            <?php else: ?>
+                <h1>Cet utilisateur n'a créé aucun blog</h1>
+            <?php endif ?>
         </div>
     <?php else: ?>
         <h3 class="text-center">Mes blogs</h3>
