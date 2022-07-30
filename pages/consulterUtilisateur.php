@@ -17,20 +17,6 @@
                     <?php if ($monIdentifiant === $identifiant) : ?>
                         <div class="userProfil-stats d-flex justify-content-between align-items-center text-black p-3">
                             <a href="index.php?p=parametres" class="btn btn-primary">Editer mon profil</a>
-                            <div class="d-flex justify-content-evenly text-center">
-                                <div>
-                                    <h5 class="mb-1"><?= $nbBlogYear ?></h5>
-                                    <p class="small text-muted mb-0">Total</p>
-                                </div>
-                                <div class="px-3">
-                                    <h5 class="mb-1"><?= $nbBlogThisWeek ?></h5>
-                                    <p class="small text-muted mb-0">Semaine</p>
-                                </div>
-                                <div>
-                                    <h5 class="mb-1"><?= $nbBlogMonth ?></h5>
-                                    <p class="small text-muted mb-0">Mois</p>
-                                </div>
-                            </div>
                         </div>
                     <?php else : ?>
                         <?php if ($statistiquesEnabled): ?>

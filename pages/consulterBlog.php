@@ -36,7 +36,7 @@
                         <?php else: ?>
                             <a href="index.php?p=parametresBlog&id=<?= $id ?>&ajouterPrivation" class="btn btn-secondary">Rendre ce blog privé</a>
                         <?php endif ?>
-                        <a href="index.php?p=supprimerBlog&id=<?= $id ?>&redirect=index.php?p=mesBlogs" class="btn btn-danger">Supprimer ce blog</a>
+                        <a href="index.php?p=supprimerBlog&id=<?= $id ?>&redirect=index.php?p=lesBlogs&identifiant=<?= $monIdentifiant ?>" class="btn btn-danger">Supprimer ce blog</a>
                     </div>
                 <?php endif ?>
             </div>

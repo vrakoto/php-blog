@@ -9,6 +9,16 @@ if (!empty($swapController)) {
             $nbBlogMonth = $pdo->nbBlogsThisMonth();
             $nbBlogYear = $pdo->nbBlogsThisYear();
             $nbBlogTotal = $pdo->nbBlogsTotal();
+
+            $lesCategories = $pdo->getLesCategoriesPopulaires(5);
+
+            if ($estConnecte) {
+                $nbBlogTodayUser = $pdo->nbCreatedBlogsToday($monIdentifiant);
+                $nbBlogThisWeekUser = $pdo->nbBlogsThisWeek($monIdentifiant);
+                $nbBlogMonthUser = $pdo->nbBlogsThisMonth($monIdentifiant);
+                $nbBlogYearUser = $pdo->nbBlogsThisYear($monIdentifiant);
+                $nbBlogTotalUser = $pdo->nbBlogsTotal($monIdentifiant);
+            }
             require_once VUES . 'accueil.php';
         break;
 
@@ -37,7 +47,7 @@ if (!empty($swapController)) {
                             $noItems = "Cet utilisateur n'a créé aucun blog.";
                         }
                     }
-                    require_once VUES_UTILISATEUR . 'mesBlogs.php';
+                    require_once VUES . 'consulterBlogsUtilisateur.php';
                 } catch (\Throwable $th) {
                     $erreur = "Erreur interne lors de la récupération des blogs de l'utilisateur";
                 }

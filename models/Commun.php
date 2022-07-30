@@ -73,6 +73,18 @@ class Commun {
         $p = $this->pdo->query($req);
         return $p->fetchAll();
     }
+    function getLesCategoriesPopulaires(int $limit = 0): array
+    {
+        $req = "SELECT intitule, count(*) as nbBlogs FROM categorie
+                JOIN blog on blog.intitule_categorie = categorie.intitule
+                GROUP BY intitule
+                ORDER BY nbBlogs DESC";
+        if ($limit <= 0) {
+            $req .= " LIMIT " . $limit;
+        }
+        $p = $this->pdo->query($req);
+        return $p->fetchAll();
+    }
 
     
     function nbCreatedBlogsToday(string $identifiant = NULL): int

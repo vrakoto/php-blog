@@ -15,12 +15,12 @@ function rechercherCategorie(currentInput) {
 }
 
 function rechercherBlog(currentInput) {
-    const titreBlogs = document.querySelectorAll('.card-title');
+    const titreBlogs = document.querySelectorAll('.titre');
     let maRecherche = currentInput.value.toLowerCase();
     
     for (let i = 0; i < titreBlogs.length; i++) {
         const leTitre = titreBlogs[i];
-        const leBlog = leTitre.closest('.card.mx-3');
+        const leBlog = leTitre.closest('.leBlog');
         const leTitreText = leTitre.textContent.toLowerCase();
         
         if (!leTitreText.includes(maRecherche)) {

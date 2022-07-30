@@ -3,22 +3,23 @@
 
     <?= form_input_label('titreBlog', 'text', 'Titre du blog', $erreurs, true) ?>
 
-    <div class="mb-4 mt-4">
-        <input type="text" class="form-input mb-2" oninput="rechercherCategorie(this)" placeholder="Rechercher une catégorie">
-        <select name="categorie" class="<?php if (isset($erreurs['categorie'])) : ?>is-invalid<?php endif ?> form-select" multiple>
-            <?php foreach ($categories as $c) :
-                $laCateg = htmlentities($c['intitule']);
-            ?>
-                <option class="lesCategories" id="<?= $laCateg ?>" value="<?= $laCateg ?>" <?php if (isset($_POST['categorie']) && $_POST['categorie'] === $laCateg) : ?>selected<?php endif ?>><?= ucfirst($laCateg) ?></option>
-            <?php endforeach ?>
-        </select>
+    <div class="mb-4 mt-4 border p-2">
+        <h5>Sélectionner une catégorie</h5>
+        <?php foreach ($categories as $c) :
+            $laCateg = htmlentities($c['intitule']);
+        ?>
+            <div class="form-check">
+                <input class="<?php if (isset($erreurs['categorie'])): ?>is-invalid<?php endif ?> form-check-input" type="radio" name="categorie" value="<?= $laCateg ?>" id="<?= $laCateg ?>" <?php if (isset($_POST['categorie']) && $_POST['categorie'] === $laCateg) : ?>checked<?php endif ?>>
+                <label class="form-check-label" for="<?= $laCateg ?>"><?= ucfirst($laCateg) ?></label>
+            </div>
+        <?php endforeach ?>
     </div>
     <?= form_input_label('description', 'text', 'Description', $erreurs, true) ?>
 
     <hr>
 
     <div class="mb-3 form-check">
-        <input type="checkbox" name="blogVisibilite" class="form-check-input" id="blogVisibilite">
+        <input type="checkbox" name="blogVisibilite" class="form-check-input" id="blogVisibilite" <?php if (isset($_POST['blogVisibilite'])): ?>checked<?php endif ?>>
         <label class="form-check-label" for="blogVisibilite">Privatiser la visibilité de ce blog (accès via autorisation)</label>
     </div>
 
